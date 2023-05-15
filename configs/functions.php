@@ -2,6 +2,29 @@
 
 //Fichier contenant les fonctions utilisées par le site
 
+// Fonction qui permettra d'autocharger les fichiers contenant les classes PHP (dans le dossier "classes")
+function call($className){
+
+    // Emplacement du dossier des classes de notre site ("classes" dans cet exemple), auquel on ajoute le nom du fichier à inclure avec .php derrière
+    $file = __DIR__ . '/../src/' . $className . '.php';
+
+    // Remplacement des slashs et antislashs par le séparateur du système d'exploitation utilisé actuellement (DIRECTORY_SEPARATOR)
+    $file = str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $file);
+
+    // Si le fichier n'existe pas, on provoque une exception pour l'indiquer
+    if(!file_exists($file)){
+        throw new Exception('La classe "' . $className . '" n\'existe pas, un "use" a peut-être été oublié ?');
+    }
+
+    require $file;
+
+}
+
+// Enregistrement de la fonction d'autoload auprès de PHP
+spl_autoload_register('call');
+
+//---------------------------------------------------------------------
+
 // Conversion de toutes les erreurs "classiques" de PHP en exceptions (comme ça, elles seront aussi capturées par notre trycatch général)
 function exceptions_error_handler($severity, $message, $filename, $lineno) {
     throw new ErrorException($message, 0, $severity, $filename, $lineno);
