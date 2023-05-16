@@ -22,24 +22,40 @@
                     <a class="nav-link<?= (ROUTE == '/') ? ' active' : '' ?>" href="<?= PUBLIC_PATH ?>/">Accueil</a>
                 </li>
 
-               <!----TODO: Penser à masquer ce bouton si l'utilisateur est connecté--->
+                <!----TODO: Penser à masquer ce bouton si l'utilisateur est connecté--->
+                <?php
 
-                <!----Lien vers la page de connexion --->
-                <li class="nav-item">
-                    <a class="nav-link<?= (ROUTE == '/connexion/') ? ' active' : '' ?>" href="<?= PUBLIC_PATH ?>/connexion/">Connexion</a>
-                </li>
+                // Si l'utilisateur est connecté
+                if (isConnected()) {
+                    ?>
+                    <!----Lien vers la page de déconnexion --->
+                    <li class="nav-item">
+                        <a class="nav-link<?= (ROUTE == '/deconnexion/') ? ' active' : '' ?>"
+                           href="<?= PUBLIC_PATH ?>/deconnexion/">Déconnexion</a>
+                    </li>
 
-                <!----Lien vers la page de déconnexion --->
-                <li class="nav-item">
-                    <a class="nav-link<?= (ROUTE == '/deconnexion/') ? ' active' : '' ?>" href="<?= PUBLIC_PATH ?>/deconnexion/">Déconnexion</a>
-                </li>
+                    <?php
 
-                <!----Lien vers la page d'inscription --->
-                <li class="nav-item">
-                    <a class="nav-link<?= (ROUTE == '/creer-un-compte/') ? ' active' : '' ?>" href="<?= PUBLIC_PATH ?>/creer-un-compte/">Inscription</a>
-                </li>
+                } else {
+                    ?>
+                    <!----Lien vers la page de connexion --->
+                    <li class="nav-item">
+                        <a class="nav-link<?= (ROUTE == '/connexion/') ? ' active' : '' ?>"
+                           href="<?= PUBLIC_PATH ?>/connexion/">Connexion</a>
+                    </li>
 
+                    <!----Lien vers la page d'inscription --->
+                    <li class="nav-item">
+                        <a class="nav-link<?= (ROUTE == '/creer-un-compte/') ? ' active' : '' ?>"
+                           href="<?= PUBLIC_PATH ?>/creer-un-compte/">Inscription</a>
+                    </li>
+
+                    <?php
+
+                }
+                ?>
             </ul>
+
 
         </div>
 

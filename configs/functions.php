@@ -70,3 +70,10 @@ function connectedDb(): PDO
     $db = new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8', DB_USER, DB_PASSWORD);
     return $db;
 }
+//--------------------------
+
+// Fonction qui retourne true si on est connecté, sinon false
+
+function isConnected(){
+    return isset($_SESSION['user']);
+}

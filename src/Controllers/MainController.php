@@ -30,7 +30,12 @@ class MainController
     public function register(): void
     {
         //TODO : rediriger sur l'accueil si on est deja connecté
+        // Redirige sur l'accueil si on est deja connecté
+        if (isConnected()){
 
+            header('Location: ' . PUBLIC_PATH . '/');
+            die();
+        }
         // Taitement du formulaire d'inscription
 
         // Appel des variables
@@ -113,7 +118,12 @@ class MainController
 
     public function login(): void
     {
-        //TODO : rediriger sur l'accueil si on est deja connecté
+        // Redirige sur l'accueil si on est deja connecté
+        if (isConnected()){
+
+            header('Location: ' . PUBLIC_PATH . '/');
+            die();
+        }
 
         // Appel des variables
         if (
@@ -154,7 +164,7 @@ class MainController
                     else{
                         // Stockage de l'utilisateur à connecté en session
                         $_SESSION['user']= $userToConnect;
-                        $sucess = 'Vous êtes bien connecté !';
+                        $success = 'Vous êtes bien connecté !';
                     }
                 }
 
@@ -172,6 +182,14 @@ class MainController
     public function logout(): void{
 
         // TODO : Rediriger sur la page de connexion si l'utilisateur n'est pas connecté
+        // Redirige l'utilisateur sur la page de connexion
+        if (!isConnected()){
+
+            header('Location: ' . PUBLIC_PATH . '/connexion/');
+            die();
+        }
+
+
 
         //Suppression de la variable 'user' stockée en session (déconnexion)
         unset($_SESSION['user']);
