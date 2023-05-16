@@ -36,6 +36,10 @@ switch (ROUTE){
         $mainController->logout();
         break;
 
+    //Route de la page de profil
+    case '/mon-profil/';
+        $mainController->profil();
+        break;
 
 
 

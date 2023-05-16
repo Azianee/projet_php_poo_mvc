@@ -195,6 +195,24 @@ class MainController
         unset($_SESSION['user']);
         require VIEWS_DIR . '/logout.php';
     }
+
+
+    /**
+     * Contrôleur de la page de profil
+     */
+
+    public function profil(): void
+    {
+        // Redirige l'utilisateur sur la page de connexion
+        if (!isConnected()){
+
+            header('Location: ' . PUBLIC_PATH . '/connexion/');
+            die();
+        }
+        // Charge la vue "profil.php"
+        require VIEWS_DIR . '/profil.php';
+    }
+
     /**
      * Contrôleur de la page 404
      */
