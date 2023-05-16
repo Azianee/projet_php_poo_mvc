@@ -72,42 +72,98 @@ class MainController
                 // Vérification si l'émail est déjà prise
                 $checkUser = $userManager->findOneBy('email', $_POST['email']);
 
-                if (!empty($checkUser)){
+                if (!empty($checkUser)) {
                     $errors[] = 'Cette adresse email est déjà utilisée !';
-                }else{
+                } else {
 
 
-                // Créer un nouvel utilisateur
+                    // Créer un nouvel utilisateur
 
-                $newUserToinsert = new User();
+                    $newUserToinsert = new User();
 
-                //Date actuelle (pour hydrater la date d'inscription)
-                $today = new DateTime();
-                // Hydratation
-                $newUserToinsert
-                    ->setEmail($_POST['email'])
-                    ->setPassword(password_hash($_POST ['password'], PASSWORD_BCRYPT))
-                    ->setFirstname($_POST['firstname'])
-                    ->setLastname($_POST['lastname'])
-                    ->setRegisterDate($today);
+                    //Date actuelle (pour hydrater la date d'inscription)
+                    $today = new DateTime();
+                    // Hydratation
+                    $newUserToinsert
+                        ->setEmail($_POST['email'])
+                        ->setPassword(password_hash($_POST ['password'], PASSWORD_BCRYPT))
+                        ->setFirstname($_POST['firstname'])
+                        ->setLastname($_POST['lastname'])
+                        ->setRegisterDate($today);
 
 
+                    // On demande au manager de sauvegarder notre nouvel utilisateur dans la BDD
+                    $userManager->save($newUserToinsert);
 
-                // On demande au manager de sauvegarder notre nouvel utilisateur dans la BDD
-                $userManager->save($newUserToinsert);
+                    // Message de succès
+                    $success = 'Votre compte a bien été créé !';
+                }
 
-                // Message de succès
-                $success = 'Votre compte a bien été créé !';
+            }
+
+
+        }
+        // Charge la vue "register.php" dans le dossier "views"
+        require VIEWS_DIR . '/register.php';
+    }
+
+    /**
+     * Contrôleur de la page de connexion
+     */
+
+    public function login(): void
+    {
+        //TODO : rediriger sur l'accueil si on est deja connecté
+
+        // Appel des variables
+        if (
+            isset($_POST['email']) &&
+            isset($_POST['password'])
+        ) {
+
+            // Vérifs
+            if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+                $errors[] = 'Adresse email invalide';
+            }
+
+            if (!preg_match('/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[ !"#\$%&\'()*+,\-.\/:;<=>?@[\\\\\]\^_`{\|}~]).{8,4096}$/u', $_POST['password'])) {
+                $errors[] = 'Mot de passe invalide';
+            }
+
+
+            // Si pas d'erreurs
+            if (!isset($errors)) {
+
+                // Instanciation du manager des utilisateurs
+
+                $userManager = new UserManager();
+
+                // Récupération du compte correspondant à l'email envoyé dans le formulaire
+                $userToConnect = $userManager->findOneBy('email', $_POST['email']);
+
+                // Si le compte n'existe pas
+                if (empty($userToConnect)) {
+                    $errors[] = 'Le compte n\'existe pas .';
+                } else {
+
+                    // Si le mot de passe n'est pas bon
+                    if ( !password_verify($_POST['password'], $userToConnect->getPassword())){
+                        $errors[]= 'Le mot de passe n\'est pas le bon mot de passe .';
+
+                    }
+                    else{
+                        // Stockage de l'utilisateur à connecté en session
+                        $_SESSION['user']= $userToConnect;
+                        $sucess = 'Vous êtes bien connecté !';
+                    }
+                }
+
             }
 
         }
 
-        // Charge la vue "register.php" dans le dossier "views"
-        require VIEWS_DIR . '/register.php';
-
+        require VIEWS_DIR . '/login.php';
     }
-    }
-
 
     /**
      * Contrôleur de la page 404
