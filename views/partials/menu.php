@@ -29,6 +29,11 @@
                     <a class="nav-link<?= (ROUTE == '/connexion/') ? ' active' : '' ?>" href="<?= PUBLIC_PATH ?>/connexion/">Connexion</a>
                 </li>
 
+                <!----Lien vers la page de déconnexion --->
+                <li class="nav-item">
+                    <a class="nav-link<?= (ROUTE == '/deconnexion/') ? ' active' : '' ?>" href="<?= PUBLIC_PATH ?>/deconnexion/">Déconnexion</a>
+                </li>
+
                 <!----Lien vers la page d'inscription --->
                 <li class="nav-item">
                     <a class="nav-link<?= (ROUTE == '/creer-un-compte/') ? ' active' : '' ?>" href="<?= PUBLIC_PATH ?>/creer-un-compte/">Inscription</a>
