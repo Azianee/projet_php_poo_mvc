@@ -66,6 +66,16 @@ class MainController
             // Si pas d'erreurs
             if (!isset($errors)) {
 
+                // Instanciation du manager des users
+                $userManager = new UserManager();
+
+                // Vérification si l'émail est déjà prise
+                $checkUser = $userManager->findOneBy('email', $_POST['email']);
+
+                if (!empty($checkUser)){
+                    $errors[] = 'Cette adresse email est déjà utilisée !';
+                }else{
+
 
                 // Créer un nouvel utilisateur
 
@@ -81,8 +91,7 @@ class MainController
                     ->setLastname($_POST['lastname'])
                     ->setRegisterDate($today);
 
-                // Instanciation du manager des users
-                $userManager = new UserManager();
+
 
                 // On demande au manager de sauvegarder notre nouvel utilisateur dans la BDD
                 $userManager->save($newUserToinsert);
@@ -96,6 +105,7 @@ class MainController
         // Charge la vue "register.php" dans le dossier "views"
         require VIEWS_DIR . '/register.php';
 
+    }
     }
 
 
