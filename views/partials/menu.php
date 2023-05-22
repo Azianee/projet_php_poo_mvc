@@ -41,6 +41,12 @@
                            href="<?= PUBLIC_PATH ?>/deconnexion/">Déconnexion</a>
                     </li>
 
+                    <!----Lien vers la page d'ajout d'un fruit --->
+                    <li class="nav-item">
+                        <a class="nav-link<?= (ROUTE == '/fruits/ajouter-un-fruit/') ? ' active' : '' ?>"
+                           href="<?= PUBLIC_PATH ?>/fruits/ajouter-un-fruit/">Ajouter un fruit</a>
+                    </li>
+
                     <?php
 
                 } else {
@@ -56,6 +62,8 @@
                         <a class="nav-link<?= (ROUTE == '/creer-un-compte/') ? ' active' : '' ?>"
                            href="<?= PUBLIC_PATH ?>/creer-un-compte/">Inscription</a>
                     </li>
+
+
 
                     <?php
 
