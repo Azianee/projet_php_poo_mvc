@@ -313,6 +313,23 @@ class MainController
 
     }
 
+
+    public function fruitDetails(): void
+    {
+        //Récuperation du manager des fruits
+        $fruitManager = new FruitManager();
+
+        //On récupère le fruit dont l'id est stocké dans l'url
+        $fruit = $fruitManager->findOneBy('id', $_GET['id']);
+
+        //Si aucun fruit n'a été trouvé, on affiche la page 404
+        if (empty($fruit)){
+            $this->page404();
+            die();
+        }
+        //Charge la vue "fruitDetails.php" dans le dossier "views"
+        require VIEWS_DIR . '/fruitDetails.php';
+    }
     /**
      * Contrôleur de la page 404
      */

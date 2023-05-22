@@ -110,4 +110,55 @@ class FruitManager{
         return $convertedFruits;
 
     }
+    /**
+     * Méthode permettant de récupérer un Fruit trouvé dans la base de données par rapport à la valeur d'un champ
+     * Par exemple : récupérer le fruit dont le nom est "ananas"
+     */
+    public function findOneBy(string $field, $value): ?Fruit
+    {
+
+        // Requête SQL préparée pour sélectionner le fruit dont le champ $field contient la valeur $value
+        $getFruit = $this->db->prepare('SELECT * FROM fruit WHERE ' . $field . ' = ?');
+
+        // Execution de la requête en envoyant la valeur
+        $getFruit->execute([
+            $value,
+        ]);
+
+        // Récupération du fruit trouvé sous la forme d'un array associatif
+        $foundFruit = $getFruit->fetch(PDO::FETCH_ASSOC);
+
+        // Fermeture de la requête
+        $getFruit->closeCursor();
+
+        // Si un utilisateur a bien été trouvé, on le convertit en "objet" de la classe "User"
+        if(!empty($foundFruit)){
+
+            // Récupération du manager des utilisateurs
+            $userManager = new UserManager();
+
+            // Récupération de l'objet de l'auteur du fruit
+            $author = $userManager->findOneBy('id', $foundFruit['user_id']);
+
+            $convertedFruit = new Fruit();
+
+            // Hydratation de "lobjet à partir des données de l'array
+            $convertedFruit
+                ->setId( $foundFruit['id'] )
+                ->setName( $foundFruit['name'] )
+                ->setColor( $foundFruit['color'] )
+                ->setOrigin( $foundFruit['origin'] )
+                ->setPricePerKilo( $foundFruit['price_per_kilo'] )
+                ->setUser( $author )
+                ->setDescription( $foundFruit['description'] )
+            ;
+
+        }
+
+        // On retourne la variable $convertedUser si elle existe, sinon "null"
+        return $convertedFruit ?? null;
+
+    }
+
+
 }
