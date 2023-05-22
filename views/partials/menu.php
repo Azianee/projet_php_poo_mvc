@@ -47,6 +47,11 @@
                            href="<?= PUBLIC_PATH ?>/fruits/ajouter-un-fruit/">Ajouter un fruit</a>
                     </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link<?= (ROUTE == '/fruits/liste/') ? ' active' : '' ?>"
+                           href="<?= PUBLIC_PATH ?>/fruits/liste/">liste des fruits</a>
+                    </li>
+
                     <?php
 
                 } else {

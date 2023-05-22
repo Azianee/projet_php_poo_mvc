@@ -60,5 +60,54 @@ class FruitManager{
         $insertFruit->closeCursor();
 
     }
+    /**
+     * Méthode pour récupérer la liste de tous les fruits
+     */
+    public function findAll(): array
+    {
 
+        // Requête directe SQL (pas préparée car pas de variable dans la requête)
+        $getFruits = $this->db->query('SELECT * FROM fruit');
+
+        // Récupération de tous les fruits sous la forme d'arrays associatifs
+        $fruits = $getFruits->fetchAll( PDO::FETCH_ASSOC );
+
+        // Fermeture de la requête
+        $getFruits->closeCursor();
+
+        // Création d'un nouvel array qui contiendra tous les fruits sous la forme d'objets de la classe "Fruit"
+        $convertedFruits = [];
+
+        // Récupération du manager des utilisateurs
+        $userManager = new UserManager();
+
+        // Pour chaque "fruit-array" dans $fruits, on crée un nouveau "fruit-objet" (de la classe Fruit) à insérer dans $convertedFruits
+        foreach($fruits as $fruit){
+
+            // Récupération de l'objet de l'auteur du fruit
+            $author = $userManager->findOneBy('id', $fruit['user_id']);
+
+            // Création d'un nouvel objet Fruit pour matérialiser le fruit extrait dans la boucle
+            $convertedFruit = new Fruit();
+
+            // Hydratation
+            $convertedFruit
+                ->setId( $fruit['id'] )
+                ->setName( $fruit['name'] )
+                ->setColor( $fruit['color'] )
+                ->setOrigin( $fruit['origin'] )
+                ->setPricePerKilo( $fruit['price_per_kilo'] )
+                ->setUser( $author )
+                ->setDescription( $fruit['description'] )
+            ;
+
+            // On ajoute le nouvel objet dans l'array $convertedFruits
+            $convertedFruits[] = $convertedFruit;
+
+        }
+
+        // On retourne le tableau contenant tous les fruits sous la forme d'objets de la classe "Fruit"
+        return $convertedFruits;
+
+    }
 }
