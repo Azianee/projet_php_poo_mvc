@@ -383,6 +383,93 @@ class MainController
     }
 
     /**
+     * Contrôleur de la page qui modifie un fruit
+     */
+    public function fruitEdit(): void
+    {
+
+        // Redirige l'utilisateur sur la page de connexion s'il n'est pas connecté
+        if(!isConnected()){
+            header('Location: ' . PUBLIC_PATH . '/connexion/');
+            die();
+        }
+
+        // Vérification que l'id dans l'url existe
+        if(!isset($_GET['id'])){
+            $this->page404();
+            die();
+        }
+
+        // Récupération du manager des fruits
+        $fruitManager = new FruitManager();
+
+        // Récupération du fruit dont l'id est stocké dans l'URL
+        $fruitToEdit = $fruitManager->findOneBy('id', $_GET['id']);
+
+        // Si le fruit n'existe pas, erreur 404
+        if(empty($fruitToEdit)){
+            $this->page404();
+            die();
+        }
+
+        // Appel des variables
+        if(
+            isset($_POST['name']) &&
+            isset($_POST['color']) &&
+            isset($_POST['origin']) &&
+            isset($_POST['price-per-kilo']) &&
+            isset($_POST['description'])
+        ){
+
+            // Vérifs
+            if(mb_strlen($_POST['name']) < 2 || mb_strlen($_POST['name']) > 50){
+                $errors[] = 'Nom invalide';
+            }
+
+            if(mb_strlen($_POST['color']) < 2 || mb_strlen($_POST['color']) > 50){
+                $errors[] = 'Couleur invalide';
+            }
+
+            if(mb_strlen($_POST['origin']) < 2 || mb_strlen($_POST['origin']) > 50){
+                $errors[] = 'Pays d\'origine invalide';
+            }
+
+            if(!preg_match('/^[0-9]{1,7}([.,][0-9]{1,2})?$/', $_POST['price-per-kilo'])){
+                $errors[] = 'Prix invalide';
+            }
+
+            if(mb_strlen($_POST['description']) < 5 || mb_strlen($_POST['description']) > 10000){
+                $errors[] = 'Description invalide';
+            }
+
+            // Si pas d'erreurs
+            if(!isset($errors)){
+
+
+                // Ré-hydratation du fruit avec les novuelles données venant du formulaire
+                $fruitToEdit
+                    ->setName( $_POST['name'] )
+                    ->setColor( $_POST['color'] )
+                    ->setOrigin( $_POST['origin'] )
+                    ->setPricePerKilo( $_POST['price-per-kilo'] )
+                    ->setDescription( $_POST['description'] )
+                ;
+
+                // Mise à jour du fruit dans la BDD
+                $fruitManager->update($fruitToEdit);
+
+                // Message de succès
+                $success = 'Le fruit a bien été modifié !';
+
+            }
+
+        }
+
+        // Charge la vue "fruitEdit.php" dans le dossier "views"
+        require VIEWS_DIR . '/fruitEdit.php';
+    }
+
+    /**
      * Contrôleur de la page 404
      */
 
