@@ -159,6 +159,21 @@ class FruitManager{
         return $convertedFruit ?? null;
 
     }
+    /*
+     * Méthode permettant de supprimer un fruit dans la base de données
+     */
+    public function delete(Fruit $fruitToDelete): void
+    {
+        // Requête SQL préparée pour supprimer le fruit dont l'id correspond à celui du fruit dans l'objet
+        $deleteFruit = $this->db->prepare('DELETE FROM fruit WHERE id = ?');
 
+        // Execution de la requête en envoyant la valeur de l'id
+        $deleteFruit->execute([
+            $fruitToDelete->getId(),
+        ]);
+
+        // Fermeture de la requête
+        $deleteFruit->closeCursor();
+    }
 
 }
